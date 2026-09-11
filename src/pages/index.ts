@@ -1,4 +1,8 @@
 export { DashboardPage } from './DashboardPage'
+export { LoginPage } from './LoginPage'
+export { HRDashboardPage } from './HRDashboardPage'
+export { OperationsDashboardPage } from './OperationsDashboardPage'
+export { AccountantDashboardPage } from './AccountantDashboardPage'
 export { EmployeeListPage } from './EmployeeListPage'
 export { EmployeeDetailPage } from './EmployeeDetailPage'
 export { AddEmployeePage } from './AddEmployeePage'

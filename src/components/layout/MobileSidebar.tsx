@@ -13,26 +13,39 @@ import {
   BarChart3,
   Briefcase,
 } from 'lucide-react'
-import { useSidebarStore } from '@/stores'
+import { useAuthStore, useSidebarStore } from '@/stores'
 import { cn } from '@/utils'
+import type { UserRole } from '@/types'
 
-const navItems = [
+interface NavItem {
+  label: string
+  href: string
+  icon: React.ReactNode
+  roles?: UserRole[]
+}
+
+const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
-  { label: 'Employees', href: '/employees', icon: <Users className="h-5 w-5" /> },
-  { label: 'Clients', href: '/clients', icon: <Building2 className="h-5 w-5" /> },
-  { label: 'Sites', href: '/sites', icon: <MapPin className="h-5 w-5" /> },
-  { label: 'Operations', href: '/operations', icon: <Shield className="h-5 w-5" /> },
-  { label: 'Attendance', href: '/attendance', icon: <Clock className="h-5 w-5" /> },
-  { label: 'Contracts', href: '/contracts', icon: <FileText className="h-5 w-5" /> },
-  { label: 'Payroll', href: '/payroll', icon: <DollarSign className="h-5 w-5" /> },
-  { label: 'Expenses', href: '/expenses', icon: <Briefcase className="h-5 w-5" /> },
-  { label: 'Reports', href: '/reports', icon: <BarChart3 className="h-5 w-5" /> },
-  { label: 'Settings', href: '/settings', icon: <Settings className="h-5 w-5" /> },
+  { label: 'Employees', href: '/employees', icon: <Users className="h-5 w-5" />, roles: ['it_chief', 'hr_compliance'] },
+  { label: 'Clients', href: '/clients', icon: <Building2 className="h-5 w-5" />, roles: ['it_chief', 'accountant'] },
+  { label: 'Sites', href: '/sites', icon: <MapPin className="h-5 w-5" />, roles: ['it_chief', 'operations_field'] },
+  { label: 'Operations', href: '/operations', icon: <Shield className="h-5 w-5" />, roles: ['it_chief', 'operations_field'] },
+  { label: 'Attendance', href: '/attendance', icon: <Clock className="h-5 w-5" />, roles: ['it_chief', 'operations_field', 'hr_compliance'] },
+  { label: 'Contracts', href: '/contracts', icon: <FileText className="h-5 w-5" />, roles: ['it_chief', 'hr_compliance', 'accountant'] },
+  { label: 'Payroll', href: '/payroll', icon: <DollarSign className="h-5 w-5" />, roles: ['it_chief', 'accountant'] },
+  { label: 'Expenses', href: '/expenses', icon: <Briefcase className="h-5 w-5" />, roles: ['it_chief', 'accountant'] },
+  { label: 'Reports', href: '/reports', icon: <BarChart3 className="h-5 w-5" />, roles: ['it_chief'] },
+  { label: 'Settings', href: '/settings', icon: <Settings className="h-5 w-5" />, roles: ['it_chief'] },
 ]
 
 export function MobileSidebar() {
   const { isMobileOpen, closeMobile } = useSidebarStore()
+  const { user } = useAuthStore()
   const location = useLocation()
+
+  const filteredItems = navItems.filter(
+    (item) => !item.roles || (user?.role && item.roles.includes(user.role))
+  )
 
   if (!isMobileOpen) return null
 
@@ -59,7 +72,7 @@ export function MobileSidebar() {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-0.5">
-          {navItems.map((item) => {
+          {filteredItems.map((item) => {
             const isActive =
               location.pathname === item.href || location.pathname.startsWith(item.href + '/')
             return (

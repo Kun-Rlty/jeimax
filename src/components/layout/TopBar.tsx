@@ -1,12 +1,28 @@
 import { Bell, Menu, Search, LogOut, User } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore, useSidebarStore } from '@/stores'
 import { getInitials } from '@/utils'
 import { useState } from 'react'
 
+const roleLabels: Record<string, string> = {
+  it_chief: 'IT & System Chief',
+  md: 'Managing Director',
+  accountant: 'Accountant',
+  contract_tendering: 'Contract & Tendering',
+  operations_field: 'Operations & Field',
+  hr_compliance: 'HR & Compliance',
+}
+
 export function TopBar() {
-  const { user } = useAuthStore()
+  const { user, logout } = useAuthStore()
   const { toggleMobile } = useSidebarStore()
+  const navigate = useNavigate()
   const [showUserMenu, setShowUserMenu] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-4 lg:px-6 sticky top-0 z-20">
@@ -47,7 +63,9 @@ export function TopBar() {
               <p className="text-sm font-medium text-text-primary leading-tight">
                 {user ? `${user.firstName} ${user.lastName}` : 'Admin User'}
               </p>
-              <p className="text-[10px] text-text-tertiary leading-tight">IT & System Chief</p>
+              <p className="text-[10px] text-text-tertiary leading-tight">
+                {user?.role ? roleLabels[user.role] || user.role : ''}
+              </p>
             </div>
           </button>
 
@@ -63,7 +81,10 @@ export function TopBar() {
                   <User className="h-4 w-4" />
                   Profile
                 </button>
-                <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-danger-bg transition-colors">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-danger-bg transition-colors"
+                >
                   <LogOut className="h-4 w-4" />
                   Sign out
                 </button>

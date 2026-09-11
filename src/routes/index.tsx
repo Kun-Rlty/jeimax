@@ -1,7 +1,11 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout'
+import { LoginPage } from '@/pages'
 import {
   DashboardPage,
+  HRDashboardPage,
+  OperationsDashboardPage,
+  AccountantDashboardPage,
   EmployeeListPage,
   EmployeeDetailPage,
   AddEmployeePage,
@@ -25,13 +29,39 @@ import {
   SettingsPage,
 } from '@/pages'
 
+function DashboardRouter() {
+  const userStr = localStorage.getItem('auth-storage')
+  let role: string | null = null
+  if (userStr) {
+    try {
+      const parsed = JSON.parse(userStr)
+      role = parsed?.state?.user?.role || null
+    } catch { /* ignore */ }
+  }
+
+  switch (role) {
+    case 'hr_compliance':
+      return <HRDashboardPage />
+    case 'operations_field':
+      return <OperationsDashboardPage />
+    case 'accountant':
+      return <AccountantDashboardPage />
+    default:
+      return <DashboardPage />
+  }
+}
+
 export const router = createBrowserRouter([
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
   {
     path: '/',
     element: <AppLayout />,
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: 'dashboard', element: <DashboardPage /> },
+      { path: 'dashboard', element: <DashboardRouter /> },
       { path: 'employees', element: <EmployeeListPage /> },
       { path: 'employees/new', element: <AddEmployeePage /> },
       { path: 'employees/:id', element: <EmployeeDetailPage /> },

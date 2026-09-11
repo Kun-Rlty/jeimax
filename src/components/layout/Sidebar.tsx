@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   Users,
@@ -13,30 +13,31 @@ import {
   ChevronLeft,
   ChevronRight,
   Briefcase,
-  ClipboardList,
 } from 'lucide-react'
-import { useSidebarStore } from '@/stores'
+import { useAuthStore, useSidebarStore } from '@/stores'
 import { cn } from '@/utils'
+import type { UserRole } from '@/types'
 
 interface NavItem {
   label: string
   href: string
   icon: React.ReactNode
   group: string
+  roles?: UserRole[]
 }
 
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="h-5 w-5" />, group: 'main' },
-  { label: 'Employees', href: '/employees', icon: <Users className="h-5 w-5" />, group: 'main' },
-  { label: 'Clients', href: '/clients', icon: <Building2 className="h-5 w-5" />, group: 'main' },
-  { label: 'Sites', href: '/sites', icon: <MapPin className="h-5 w-5" />, group: 'main' },
-  { label: 'Operations', href: '/operations', icon: <Shield className="h-5 w-5" />, group: 'operations' },
-  { label: 'Attendance', href: '/attendance', icon: <Clock className="h-5 w-5" />, group: 'operations' },
-  { label: 'Contracts', href: '/contracts', icon: <FileText className="h-5 w-5" />, group: 'financial' },
-  { label: 'Payroll', href: '/payroll', icon: <DollarSign className="h-5 w-5" />, group: 'financial' },
-  { label: 'Expenses', href: '/expenses', icon: <Briefcase className="h-5 w-5" />, group: 'financial' },
-  { label: 'Reports', href: '/reports', icon: <BarChart3 className="h-5 w-5" />, group: 'reports' },
-  { label: 'Settings', href: '/settings', icon: <Settings className="h-5 w-5" />, group: 'settings' },
+  { label: 'Employees', href: '/employees', icon: <Users className="h-5 w-5" />, group: 'main', roles: ['it_chief', 'hr_compliance'] },
+  { label: 'Clients', href: '/clients', icon: <Building2 className="h-5 w-5" />, group: 'main', roles: ['it_chief', 'accountant'] },
+  { label: 'Sites', href: '/sites', icon: <MapPin className="h-5 w-5" />, group: 'main', roles: ['it_chief', 'operations_field'] },
+  { label: 'Operations', href: '/operations', icon: <Shield className="h-5 w-5" />, group: 'operations', roles: ['it_chief', 'operations_field'] },
+  { label: 'Attendance', href: '/attendance', icon: <Clock className="h-5 w-5" />, group: 'operations', roles: ['it_chief', 'operations_field', 'hr_compliance'] },
+  { label: 'Contracts', href: '/contracts', icon: <FileText className="h-5 w-5" />, group: 'financial', roles: ['it_chief', 'hr_compliance', 'accountant'] },
+  { label: 'Payroll', href: '/payroll', icon: <DollarSign className="h-5 w-5" />, group: 'financial', roles: ['it_chief', 'accountant'] },
+  { label: 'Expenses', href: '/expenses', icon: <Briefcase className="h-5 w-5" />, group: 'financial', roles: ['it_chief', 'accountant'] },
+  { label: 'Reports', href: '/reports', icon: <BarChart3 className="h-5 w-5" />, group: 'reports', roles: ['it_chief'] },
+  { label: 'Settings', href: '/settings', icon: <Settings className="h-5 w-5" />, group: 'settings', roles: ['it_chief'] },
 ]
 
 const groupLabels: Record<string, string | null> = {
@@ -49,9 +50,14 @@ const groupLabels: Record<string, string | null> = {
 
 export function Sidebar() {
   const { isOpen, toggle } = useSidebarStore()
+  const { user } = useAuthStore()
   const location = useLocation()
 
-  const grouped = navItems.reduce<Record<string, NavItem[]>>((acc, item) => {
+  const filteredItems = navItems.filter(
+    (item) => !item.roles || (user?.role && item.roles.includes(user.role))
+  )
+
+  const grouped = filteredItems.reduce<Record<string, NavItem[]>>((acc, item) => {
     if (!acc[item.group]) acc[item.group] = []
     acc[item.group].push(item)
     return acc
