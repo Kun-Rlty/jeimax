@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { FileText, Plus, AlertTriangle } from 'lucide-react'
 import { PageHeader, Button, Tabs, StatusBadge, Badge, Card, SearchInput } from '@/components/ui'
 import { mockContracts } from '@/data/mock'
@@ -42,7 +43,9 @@ export function ContractsPage() {
         title="Contracts"
         description="Manage contracts for employees, clients, and sites."
         actions={
-          <Button icon={<Plus className="h-4 w-4" />}>New Contract</Button>
+          <Link to="/contracts/new">
+            <Button icon={<Plus className="h-4 w-4" />}>New Contract</Button>
+          </Link>
         }
       />
 
@@ -97,12 +100,18 @@ export function ContractsPage() {
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-1">
                         {contract.status === 'expiring' && (
-                          <Button size="sm" variant="secondary">Renew</Button>
+                          <Link to={`/contracts/${contract.id}/renew`}>
+                            <Button size="sm" variant="secondary">Renew</Button>
+                          </Link>
                         )}
                         {contract.status === 'expired' && (
-                          <Button size="sm">Renew</Button>
+                          <Link to={`/contracts/${contract.id}/renew`}>
+                            <Button size="sm">Renew</Button>
+                          </Link>
                         )}
-                        <Button size="sm" variant="ghost">View</Button>
+                        <Link to={`/contracts/${contract.id}`}>
+                          <Button size="sm" variant="ghost">View</Button>
+                        </Link>
                       </div>
                     </td>
                   </tr>

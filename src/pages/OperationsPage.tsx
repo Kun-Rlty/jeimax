@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Shield, Users, MapPin, AlertTriangle } from 'lucide-react'
 import { PageHeader, Card, CardTitle, StatusBadge, Badge, Button, Select } from '@/components/ui'
 import { mockSites, mockEmployees } from '@/data/mock'
@@ -122,9 +123,11 @@ export function OperationsPage() {
             </div>
 
             <div className="mt-3 pt-3 border-t border-border-light">
-              <Button size="sm" variant="secondary" className="w-full" icon={<Users className="h-4 w-4" />}>
-                Assign Guard
-              </Button>
+              <Link to={`/operations/assign-guard?siteId=${site.id}`}>
+                <Button size="sm" variant="secondary" className="w-full" icon={<Users className="h-4 w-4" />}>
+                  Assign Guard
+                </Button>
+              </Link>
             </div>
           </Card>
         ))}

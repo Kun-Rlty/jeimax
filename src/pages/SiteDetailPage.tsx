@@ -39,7 +39,9 @@ export function SiteDetailPage() {
             <Link to={`/sites/${site.id}/edit`}>
               <Button variant="secondary" icon={<Edit className="h-4 w-4" />}>Edit</Button>
             </Link>
-            <Button icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+            <Link to={`/sites/${site.id}/assign-guard`}>
+              <Button icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+            </Link>
           </div>
         }
       />
@@ -51,7 +53,9 @@ export function SiteDetailPage() {
               <p>This site must have at least <strong>1 guard</strong> assigned at all times.</p>
               <p className="mt-1">Currently assigned: <strong>{site.assignedGuards}</strong> guards</p>
             </div>
-            <Button size="sm" icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+            <Link to={`/sites/${site.id}/assign-guard`}>
+              <Button size="sm" icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+            </Link>
           </div>
         </Alert>
       )}
@@ -112,7 +116,9 @@ export function SiteDetailPage() {
       <Card>
         <div className="flex items-center justify-between mb-4">
           <CardTitle>Assigned Guards ({siteEmployees.length})</CardTitle>
-          <Button size="sm" icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+          <Link to={`/sites/${site.id}/assign-guard`}>
+            <Button size="sm" icon={<Users className="h-4 w-4" />}>Assign Guard</Button>
+          </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

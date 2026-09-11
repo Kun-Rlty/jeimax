@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { DollarSign, FileText, Download } from 'lucide-react'
 import { PageHeader, Button, Tabs, Select, StatusBadge, Card, CardTitle } from '@/components/ui'
 import { mockPayroll } from '@/data/mock'
@@ -48,7 +49,9 @@ export function PayrollPage() {
         actions={
           <div className="flex gap-2">
             <Button variant="secondary" icon={<Download className="h-4 w-4" />}>Export</Button>
-            <Button icon={<FileText className="h-4 w-4" />}>Process Payroll</Button>
+            <Link to="/payroll/process">
+              <Button icon={<FileText className="h-4 w-4" />}>Process Payroll</Button>
+            </Link>
           </div>
         }
       />

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Clock, CheckCircle, AlertTriangle } from 'lucide-react'
 import { PageHeader, Button, Select, StatusBadge, Badge, Card } from '@/components/ui'
 import { mockAttendance, mockEmployees, mockSites } from '@/data/mock'
@@ -58,7 +59,9 @@ export function AttendancePage() {
         title="Attendance"
         description="Track and manage daily attendance records."
         actions={
-          <Button icon={<CheckCircle className="h-4 w-4" />}>Record Attendance</Button>
+          <Link to="/attendance/record">
+            <Button icon={<CheckCircle className="h-4 w-4" />}>Record Attendance</Button>
+          </Link>
         }
       />
 
